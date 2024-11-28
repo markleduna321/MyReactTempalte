@@ -157,7 +157,7 @@ export default function UserEditSection({ selectedUser, onClose, setAlertMessage
                         Save
                     </button>
                 </div>
-            </div>
+            </div>  
         </form>
     );
 }
