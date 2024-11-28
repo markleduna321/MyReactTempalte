@@ -43,7 +43,7 @@ class AuthenticatedSessionController extends Controller
         } else if (Auth::user()->role_id == 2) {
             $user = auth()->user();
             if ($user) {
-                $user->update(['is_online' => true]);
+                $user->update(['is_online' => true, 'updated_at' => now()]);
             }
             return redirect()->intended(RouteServiceProvider::USER); 
         }
@@ -69,7 +69,7 @@ class AuthenticatedSessionController extends Controller
     {
         $user = auth()->user(); // Get the authenticated user first
         if ($user) {
-            $user->update(['is_online' => false]); // Update is_online status
+            $user->update(['is_online' => false, 'updated_at' => now()]); // Update is_online status
         }
 
         Auth::guard('web')->logout(); // Log out the user

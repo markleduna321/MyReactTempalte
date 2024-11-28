@@ -8,6 +8,28 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function getUsers(Request $request)
+    {
+        $lastFetchedAt = $request->query('updated_at'); // The timestamp of the last fetch
+        $perPage = 2; // Set the number of users per page (adjust as needed)
+    
+        // If 'last_fetched_at' is provided, fetch users whose status has changed
+        if ($lastFetchedAt) {
+            $users = User::where('updated_at', '>', $lastFetchedAt)
+                         ->paginate($perPage);
+        } else {
+            // Fetch users from the beginning if no lastFetchedAt timestamp is provided
+            $users = User::paginate($perPage);
+        }
+    
+        return response()->json([
+            'users' => $users->items(),
+            'updated_at' => now(),
+            'next_page_url' => $users->nextPageUrl(),
+            'prev_page_url' => $users->previousPageUrl(),
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */

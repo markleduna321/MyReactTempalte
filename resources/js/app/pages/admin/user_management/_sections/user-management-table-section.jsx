@@ -64,6 +64,7 @@ export default function UserManagementTableSection() {
     setDeleteModalOpen(false);
     setUserToDelete(null);
   };
+  
 
   return (
     <div className="mt-8 flow-root bg-white p-5 rounded-lg">
