@@ -34,7 +34,32 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        if (Auth::user()->role_id == 1) {
+            $user = auth()->user();
+            if ($user) {
+                $user->update(['is_online' => true]);
+            }
+            return redirect()->intended(RouteServiceProvider::ADMIN);
+        } else if (Auth::user()->role_id == 2) {
+            $user = auth()->user();
+            if ($user) {
+                $user->update(['is_online' => true]);
+            }
+            return redirect()->intended(RouteServiceProvider::USER); 
+        }
+        // Additional role checks...
+        
+        // else if(Auth::user()->role_id == 3){
+        //     return redirect()->intended(RouteServiceProvider::WAREHOUSE); 
+        // }else if(Auth::user()->role_id == 4){
+        //     return redirect()->intended(RouteServiceProvider::ASC); 
+        // }else if(Auth::user()->role_id == 5){
+        //     return redirect()->intended(RouteServiceProvider::AGENT); 
+        // }else if(Auth::user()->role_id == 6){
+        //     return redirect()->intended(RouteServiceProvider::CURTIS); 
+        // }
+
+        //return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**
@@ -42,12 +67,16 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        $user = auth()->user(); // Get the authenticated user first
+        if ($user) {
+            $user->update(['is_online' => false]); // Update is_online status
+        }
 
-        $request->session()->invalidate();
+        Auth::guard('web')->logout(); // Log out the user
 
-        $request->session()->regenerateToken();
+        $request->session()->invalidate(); // Invalidate the session
+        $request->session()->regenerateToken(); // Regenerate CSRF token
 
-        return redirect('/');
+        return redirect('/'); // Redirect to the login or home page
     }
 }
