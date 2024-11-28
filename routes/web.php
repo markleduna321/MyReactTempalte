@@ -44,6 +44,14 @@ Route::middleware('auth:sanctum', 'role:1')->prefix('admin')->group(function () 
         }); */
     });
 
+    Route::prefix('products')->group(function () {
+        Route::get('/', function () {
+        return Inertia::render('admin/products/page');
+        });
+
+        
+    });
+
     
     Route::get('reports', function () {
         return Inertia::render('admin/reports/page');
